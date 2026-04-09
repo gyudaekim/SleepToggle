@@ -1,0 +1,508 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0362476488DB53FDFD27ADFB /* SleepHelperDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D3FBDEF87F0C4B601B0F41 /* SleepHelperDelegate.swift */; };
+		07D2EB621D2E79C22BB496B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A7BC48CE020274C6EB2970 /* SettingsView.swift */; };
+		0D3A1C118F173D0DA7D02524 /* SleepToggleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8CE99FFC47E0C0536A551 /* SleepToggleApp.swift */; };
+		15D22F7FD69603E658531C54 /* XPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958F55C1042ECABB8E02C186 /* XPCClient.swift */; };
+		1DD8BB76916C8940FDEA27FA /* BatteryMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3F80014F55BC4D5AB2BECC /* BatteryMonitor.swift */; };
+		27B14A439314C982780E0453 /* SleepToggleXPCProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E3F5FCD3F76DE10F90A0DC /* SleepToggleXPCProtocol.swift */; };
+		53FBBCBC906A5D4FE57E4622 /* SleepToggleHelper in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 9A55D75864C5B4A1539A1490 /* SleepToggleHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		77650A566F6F5BDE0E33DB55 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2603D8011F767A0B2352E7AE /* main.swift */; };
+		C647D786091DD722D77C99EF /* SleepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465AAD3DCE8E4B0D0A4060BE /* SleepManager.swift */; };
+		CA48052EA600049BD41F4FB6 /* TimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE095FA7B8F060EBD7171D7F /* TimerService.swift */; };
+		E1FA101BD0389799C44CDB1E /* StatusPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E2D18F42633140CBFBADC5 /* StatusPanelView.swift */; };
+		E532342CC35420F7CFA20FC6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B85AED8AB8720541EF6947A /* AppSettings.swift */; };
+		F8C8D64AB2E64537F21359E4 /* SleepToggleXPCProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E3F5FCD3F76DE10F90A0DC /* SleepToggleXPCProtocol.swift */; };
+		F9ACFA2822F38C59507F1165 /* WiFiMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C42DB4E53707C46603AA45 /* WiFiMonitor.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		61426543551A92F1FC484EB4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39F8E2759224EC0426274752 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E907960F43424ABEC018BCEB;
+			remoteInfo = SleepToggleHelper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9CBE45C334CEB06EFFFD5090 /* Embed Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../Library/LaunchDaemons;
+			dstSubfolderSpec = 6;
+			files = (
+				53FBBCBC906A5D4FE57E4622 /* SleepToggleHelper in Embed Dependencies */,
+			);
+			name = "Embed Dependencies";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1FAED4927FDF60EC1D67F9F9 /* SleepToggle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SleepToggle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22D3FBDEF87F0C4B601B0F41 /* SleepHelperDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepHelperDelegate.swift; sourceTree = "<group>"; };
+		2603D8011F767A0B2352E7AE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		27E3F5FCD3F76DE10F90A0DC /* SleepToggleXPCProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepToggleXPCProtocol.swift; sourceTree = "<group>"; };
+		32A7BC48CE020274C6EB2970 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		465AAD3DCE8E4B0D0A4060BE /* SleepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepManager.swift; sourceTree = "<group>"; };
+		4B85AED8AB8720541EF6947A /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		6FFDCA065358C9464DE3EC51 /* SleepToggle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SleepToggle.entitlements; sourceTree = "<group>"; };
+		958F55C1042ECABB8E02C186 /* XPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCClient.swift; sourceTree = "<group>"; };
+		9A55D75864C5B4A1539A1490 /* SleepToggleHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = SleepToggleHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC3F80014F55BC4D5AB2BECC /* BatteryMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryMonitor.swift; sourceTree = "<group>"; };
+		CFD8CE99FFC47E0C0536A551 /* SleepToggleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepToggleApp.swift; sourceTree = "<group>"; };
+		D8C42DB4E53707C46603AA45 /* WiFiMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiMonitor.swift; sourceTree = "<group>"; };
+		DE095FA7B8F060EBD7171D7F /* TimerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerService.swift; sourceTree = "<group>"; };
+		E3E2D18F42633140CBFBADC5 /* StatusPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPanelView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		10652D1EE62CDB6D095014E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FAED4927FDF60EC1D67F9F9 /* SleepToggle.app */,
+				9A55D75864C5B4A1539A1490 /* SleepToggleHelper */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4B4C79D3F47AFDB84639BBA4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4B85AED8AB8720541EF6947A /* AppSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		532E596B31539F95FD3954F7 = {
+			isa = PBXGroup;
+			children = (
+				A83981F02A9E5AEAE45472F1 /* SleepToggle */,
+				A557779D8A5D79DE263D3E3C /* SleepToggleHelper */,
+				10652D1EE62CDB6D095014E7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		919527CF6DF7108F944BBACE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AC3F80014F55BC4D5AB2BECC /* BatteryMonitor.swift */,
+				465AAD3DCE8E4B0D0A4060BE /* SleepManager.swift */,
+				DE095FA7B8F060EBD7171D7F /* TimerService.swift */,
+				D8C42DB4E53707C46603AA45 /* WiFiMonitor.swift */,
+				958F55C1042ECABB8E02C186 /* XPCClient.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A557779D8A5D79DE263D3E3C /* SleepToggleHelper */ = {
+			isa = PBXGroup;
+			children = (
+				2603D8011F767A0B2352E7AE /* main.swift */,
+				22D3FBDEF87F0C4B601B0F41 /* SleepHelperDelegate.swift */,
+			);
+			path = SleepToggleHelper;
+			sourceTree = "<group>";
+		};
+		A83981F02A9E5AEAE45472F1 /* SleepToggle */ = {
+			isa = PBXGroup;
+			children = (
+				CFD8CE99FFC47E0C0536A551 /* SleepToggleApp.swift */,
+				4B4C79D3F47AFDB84639BBA4 /* Models */,
+				D072F687361917AAE52E8260 /* Resources */,
+				919527CF6DF7108F944BBACE /* Services */,
+				DA7F8D1B0535CEEA9957B4E0 /* Shared */,
+				D178391510CF8E4D73C352AA /* Views */,
+			);
+			path = SleepToggle;
+			sourceTree = "<group>";
+		};
+		D072F687361917AAE52E8260 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6FFDCA065358C9464DE3EC51 /* SleepToggle.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D178391510CF8E4D73C352AA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				32A7BC48CE020274C6EB2970 /* SettingsView.swift */,
+				E3E2D18F42633140CBFBADC5 /* StatusPanelView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DA7F8D1B0535CEEA9957B4E0 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				27E3F5FCD3F76DE10F90A0DC /* SleepToggleXPCProtocol.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0AEFFC7CFF502C847BF2B02E /* SleepToggle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8252070AB20C8A57AF7FB0EC /* Build configuration list for PBXNativeTarget "SleepToggle" */;
+			buildPhases = (
+				8D5202CEE37C966D16AC87DA /* Sources */,
+				9CBE45C334CEB06EFFFD5090 /* Embed Dependencies */,
+				5149DDA0C6826A5060561B0E /* Copy LaunchDaemon Plist */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				14034A0FC2D5F8BF93C6E864 /* PBXTargetDependency */,
+			);
+			name = SleepToggle;
+			packageProductDependencies = (
+			);
+			productName = SleepToggle;
+			productReference = 1FAED4927FDF60EC1D67F9F9 /* SleepToggle.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E907960F43424ABEC018BCEB /* SleepToggleHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D307A637E2EEB1C915FCEF94 /* Build configuration list for PBXNativeTarget "SleepToggleHelper" */;
+			buildPhases = (
+				52A24402B94A509660732E2B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SleepToggleHelper;
+			packageProductDependencies = (
+			);
+			productName = SleepToggleHelper;
+			productReference = 9A55D75864C5B4A1539A1490 /* SleepToggleHelper */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		39F8E2759224EC0426274752 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = FA46D86973F42FAE7D2EB7F8 /* Build configuration list for PBXProject "SleepToggle" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 532E596B31539F95FD3954F7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 10652D1EE62CDB6D095014E7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0AEFFC7CFF502C847BF2B02E /* SleepToggle */,
+				E907960F43424ABEC018BCEB /* SleepToggleHelper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5149DDA0C6826A5060561B0E /* Copy LaunchDaemon Plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy LaunchDaemon Plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"${SRCROOT}/SleepToggleHelper/com.sleeptoggle.helper.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Library/LaunchDaemons/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		52A24402B94A509660732E2B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0362476488DB53FDFD27ADFB /* SleepHelperDelegate.swift in Sources */,
+				F8C8D64AB2E64537F21359E4 /* SleepToggleXPCProtocol.swift in Sources */,
+				77650A566F6F5BDE0E33DB55 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D5202CEE37C966D16AC87DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E532342CC35420F7CFA20FC6 /* AppSettings.swift in Sources */,
+				1DD8BB76916C8940FDEA27FA /* BatteryMonitor.swift in Sources */,
+				07D2EB621D2E79C22BB496B2 /* SettingsView.swift in Sources */,
+				C647D786091DD722D77C99EF /* SleepManager.swift in Sources */,
+				0D3A1C118F173D0DA7D02524 /* SleepToggleApp.swift in Sources */,
+				27B14A439314C982780E0453 /* SleepToggleXPCProtocol.swift in Sources */,
+				E1FA101BD0389799C44CDB1E /* StatusPanelView.swift in Sources */,
+				CA48052EA600049BD41F4FB6 /* TimerService.swift in Sources */,
+				F9ACFA2822F38C59507F1165 /* WiFiMonitor.swift in Sources */,
+				15D22F7FD69603E658531C54 /* XPCClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		14034A0FC2D5F8BF93C6E864 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E907960F43424ABEC018BCEB /* SleepToggleHelper */;
+			targetProxy = 61426543551A92F1FC484EB4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		095C52A568BFF45033CA4BDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5;
+			};
+			name = Debug;
+		};
+		0F300379818E76EEF8DDBB33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SleepToggle/Resources/SleepToggle.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = SleepToggle/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sleeptoggle.app;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+			};
+			name = Release;
+		};
+		388EA91361B0B606096A8135 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SleepToggleHelper/SleepToggleHelper.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sleeptoggle.helper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+			};
+			name = Release;
+		};
+		6A574E6A0A371A777BF32570 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SleepToggle/Resources/SleepToggle.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = SleepToggle/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sleeptoggle.app;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+			};
+			name = Debug;
+		};
+		7E4E5A765000C38EAAA47528 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SleepToggleHelper/SleepToggleHelper.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sleeptoggle.helper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+			};
+			name = Debug;
+		};
+		91AB2ACB1F32EEF9264396BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8252070AB20C8A57AF7FB0EC /* Build configuration list for PBXNativeTarget "SleepToggle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A574E6A0A371A777BF32570 /* Debug */,
+				0F300379818E76EEF8DDBB33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D307A637E2EEB1C915FCEF94 /* Build configuration list for PBXNativeTarget "SleepToggleHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E4E5A765000C38EAAA47528 /* Debug */,
+				388EA91361B0B606096A8135 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FA46D86973F42FAE7D2EB7F8 /* Build configuration list for PBXProject "SleepToggle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				095C52A568BFF45033CA4BDE /* Debug */,
+				91AB2ACB1F32EEF9264396BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 39F8E2759224EC0426274752 /* Project object */;
+}

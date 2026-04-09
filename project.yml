@@ -1,0 +1,72 @@
+name: SleepToggle
+options:
+  bundleIdPrefix: com.sleeptoggle
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "26.3"
+
+settings:
+  base:
+    SWIFT_VERSION: "5"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+
+targets:
+  SleepToggle:
+    type: application
+    platform: macOS
+    sources:
+      - path: SleepToggle
+        excludes:
+          - Resources/Info.plist
+    info:
+      path: SleepToggle/Resources/Info.plist
+      properties:
+        LSUIElement: true
+        NSLocationWhenInUseUsageDescription: "SleepToggle needs location access to detect Wi-Fi network names for automatic sleep prevention."
+        CFBundleDisplayName: SleepToggle
+    entitlements:
+      path: SleepToggle/Resources/SleepToggle.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sleeptoggle.app
+        INFOPLIST_FILE: SleepToggle/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: SleepToggle/Resources/SleepToggle.entitlements
+        ENABLE_HARDENED_RUNTIME: true
+        COMBINE_HIDPI_IMAGES: true
+        SWIFT_STRICT_CONCURRENCY: minimal
+    dependencies:
+      - target: SleepToggleHelper
+        embed: true
+        codeSign: true
+        copy:
+          destination: executables
+          subpath: ../Library/LaunchDaemons
+    postBuildScripts:
+      - name: "Copy LaunchDaemon Plist"
+        script: |
+          cp "${SRCROOT}/SleepToggleHelper/com.sleeptoggle.helper.plist" "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Library/LaunchDaemons/"
+        basedOnDependencyAnalysis: false
+    frameworks:
+      - CoreWLAN
+      - CoreLocation
+      - IOKit
+      - ServiceManagement
+
+  SleepToggleHelper:
+    type: tool
+    platform: macOS
+    sources:
+      - path: SleepToggleHelper
+        excludes:
+          - "*.plist"
+          - "*.entitlements"
+      - path: SleepToggle/Shared
+    entitlements:
+      path: SleepToggleHelper/SleepToggleHelper.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sleeptoggle.helper
+        CODE_SIGN_ENTITLEMENTS: SleepToggleHelper/SleepToggleHelper.entitlements
+        ENABLE_HARDENED_RUNTIME: true
+        SWIFT_STRICT_CONCURRENCY: minimal
+        SKIP_INSTALL: true
