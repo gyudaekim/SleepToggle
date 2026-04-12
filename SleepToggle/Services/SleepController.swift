@@ -11,9 +11,19 @@ class SleepController {
     /// One-time setup: create sudoers entry (requires password once)
     func setupPasswordlessSudo(completion: @escaping (Bool, String?) -> Void) {
         let user = NSUserName()
-        let rule = "\(user) ALL=(ALL) NOPASSWD: /usr/bin/pmset -a disablesleep 1, /usr/bin/pmset -a disablesleep 0"
+
+        // Validate username contains only safe characters for shell interpolation
+        let safeChars = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_."))
+        guard user.unicodeScalars.allSatisfy({ safeChars.contains($0) }) else {
+            completion(false, "Username contains unsupported characters")
+            return
+        }
+
+        let rule = "\(user) ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 1, /usr/bin/pmset -a disablesleep 0"
+        // Write to temp file, validate with visudo, then install to sudoers.d.
+        // If visudo fails, the temp file is cleaned up and sudoers.d is never touched.
         let script = """
-        do shell script "echo '\(rule)' > /etc/sudoers.d/sleeptoggle && chmod 0440 /etc/sudoers.d/sleeptoggle" with administrator privileges
+        do shell script "echo '\(rule)' > /tmp/sleeptoggle.sudoers && visudo -cf /tmp/sleeptoggle.sudoers && cp /tmp/sleeptoggle.sudoers /etc/sudoers.d/sleeptoggle && chmod 0440 /etc/sudoers.d/sleeptoggle; rm -f /tmp/sleeptoggle.sudoers" with administrator privileges
         """
 
         DispatchQueue.global(qos: .userInitiated).async {
@@ -38,6 +48,21 @@ class SleepController {
 
     func disableSleepPrevention(completion: @escaping (Bool, String?) -> Void) {
         runPmset(enable: false, completion: completion)
+    }
+
+    /// Synchronous disable for use during app termination.
+    /// Blocks until pmset completes (or fails), ensuring sleep is re-enabled before exit.
+    func disableSleepPreventionSync() {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/sudo")
+        process.arguments = ["/usr/bin/pmset", "-a", "disablesleep", "0"]
+        process.standardInput = FileHandle.nullDevice
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {}
     }
 
     func getSleepPreventionStatus(completion: @escaping (Bool) -> Void) {

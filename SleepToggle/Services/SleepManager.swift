@@ -75,6 +75,7 @@ class SleepManager {
                     self?.onStateChanged?(true)
                 } else {
                     self?.error = errorMsg ?? "Failed to enable"
+                    self?.checkSetupValidity()
                 }
             }
         }
@@ -92,8 +93,16 @@ class SleepManager {
                     self?.onStateChanged?(false)
                 } else {
                     self?.error = errorMsg ?? "Failed to disable"
+                    self?.checkSetupValidity()
                 }
             }
+        }
+    }
+
+    /// If sudo fails, check if the sudoers file was deleted/corrupted and prompt re-setup
+    private func checkSetupValidity() {
+        if !sleepController.isSetupComplete {
+            needsSetup = true
         }
     }
 
@@ -184,7 +193,7 @@ class SleepManager {
 
     func cleanup() {
         if isActive {
-            disable(reason: "App quitting")
+            sleepController.disableSleepPreventionSync()
         }
     }
 }

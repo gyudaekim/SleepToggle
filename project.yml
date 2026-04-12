@@ -34,39 +34,8 @@ targets:
         ENABLE_HARDENED_RUNTIME: true
         COMBINE_HIDPI_IMAGES: true
         SWIFT_STRICT_CONCURRENCY: minimal
-    dependencies:
-      - target: SleepToggleHelper
-        embed: true
-        codeSign: true
-        copy:
-          destination: executables
-          subpath: ../Library/LaunchDaemons
-    postBuildScripts:
-      - name: "Copy LaunchDaemon Plist"
-        script: |
-          cp "${SRCROOT}/SleepToggleHelper/com.sleeptoggle.helper.plist" "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Library/LaunchDaemons/"
-        basedOnDependencyAnalysis: false
     frameworks:
       - CoreWLAN
       - CoreLocation
       - IOKit
       - ServiceManagement
-
-  SleepToggleHelper:
-    type: tool
-    platform: macOS
-    sources:
-      - path: SleepToggleHelper
-        excludes:
-          - "*.plist"
-          - "*.entitlements"
-      - path: SleepToggle/Shared
-    entitlements:
-      path: SleepToggleHelper/SleepToggleHelper.entitlements
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.sleeptoggle.helper
-        CODE_SIGN_ENTITLEMENTS: SleepToggleHelper/SleepToggleHelper.entitlements
-        ENABLE_HARDENED_RUNTIME: true
-        SWIFT_STRICT_CONCURRENCY: minimal
-        SKIP_INSTALL: true

@@ -11,6 +11,10 @@ class BatteryMonitor {
 
     private var runLoopSource: CFRunLoopSource?
 
+    deinit {
+        stopMonitoring()
+    }
+
     func startMonitoring() {
         let context = Unmanaged.passUnretained(self).toOpaque()
         runLoopSource = IOPSNotificationCreateRunLoopSource({ context in
@@ -43,7 +47,7 @@ class BatteryMonitor {
 
         let capacity = desc[kIOPSCurrentCapacityKey] as? Int ?? 0
         let maxCapacity = desc[kIOPSMaxCapacityKey] as? Int ?? 100
-        let level = maxCapacity > 0 ? (capacity * 100) / maxCapacity : 0
+        let level = maxCapacity > 0 ? (capacity * 100) / maxCapacity : 100
         let powerSource = desc[kIOPSPowerSourceStateKey] as? String ?? ""
         let isOnAC = powerSource == kIOPSACPowerValue
 

@@ -143,3 +143,143 @@ Or open `SleepToggle.xcodeproj` in Xcode and hit Run.
 | Project generation | xcodegen | Easier to maintain than raw .xcodeproj. Edit project.yml, run `xcodegen generate`. |
 | Settings storage | UserDefaults | Simple, sufficient. No database needed. |
 | Wi-Fi detection | CoreWLAN + CoreLocation | CoreWLAN requires Location Services for SSID access since macOS 14. |
+
+---
+
+## Code Review & Fixes (2026-04-12)
+
+A comprehensive code review was run against the initial commit using 9 parallel reviewers (correctness, testing, maintainability, project-standards, security, reliability, adversarial, agent-native, learnings-researcher). This section documents what was found, what was fixed, what was tried, and what remains.
+
+### What Was Fixed
+
+These changes are uncommitted in the working tree. Run `xcodegen generate` after committing to regenerate the `.xcodeproj`.
+
+**1. BatteryMonitor use-after-free (BatteryMonitor.swift)**
+- **Problem**: No `deinit`. If `BatteryMonitor` is deallocated while its CFRunLoopSource is still registered, the callback fires into freed memory.
+- **Fix**: Added `deinit { stopMonitoring() }`.
+
+**2. Battery maxCapacity=0 false low-battery trigger (BatteryMonitor.swift:50)**
+- **Problem**: If IOKit returns `maxCapacity=0` (rare, third-party batteries), `(capacity * 100) / maxCapacity` would yield 0, which triggers the low-battery auto-disable even though battery state is unknown.
+- **Fix**: Changed fallback from `0` to `100`. Unknown battery = assume full = don't trigger protection.
+
+**3. Sudoers rule overly broad (SleepController.swift:22)**
+- **Problem**: Rule used `ALL=(ALL)` allowing run-as any user. Only root is needed for pmset.
+- **Fix**: Changed to `ALL=(root)`.
+
+**4. File rename: XPCClient.swift -> SleepController.swift**
+- **Problem**: File was named `XPCClient.swift` but contained `class SleepController` (leftover from the abandoned XPC approach).
+- **Fix**: Renamed to match the class it contains.
+
+**5. Sudoers validation with visudo (SleepController.swift:22-27)**
+- **Problem**: The old setup wrote directly to `/etc/sudoers.d/sleeptoggle` with no syntax validation. An invalid rule would break all `sudo` system-wide.
+- **Fix**: Setup now writes to `/tmp/sleeptoggle.sudoers` first, validates with `visudo -cf`, then copies to `/etc/sudoers.d/` only if valid. Temp file is always cleaned up.
+- **What was considered**: Running `visudo -cf` after writing to `/etc/sudoers.d/` directly, but that's dangerous — the broken file is already in place if validation fails. The temp-file-then-move approach ensures the sudoers directory is never touched with invalid content.
+
+**6. Username shell injection prevention (SleepController.swift:15-20)**
+- **Problem**: `NSUserName()` was interpolated directly into a single-quoted AppleScript shell command. A username containing `'` would break quoting.
+- **Fix**: Added validation that username only contains `[a-zA-Z0-9._-]` before building the rule. If invalid, setup fails with a clear error.
+- **What was considered**: Shell-escaping the username (replacing `'` with `'\''`), but validation is simpler and more robust — macOS usernames shouldn't contain special chars anyway.
+
+**7. Synchronous cleanup on app exit (SleepController.swift:53-66, SleepManager.swift:189-191)**
+- **Problem**: `cleanup()` called `disable()` which dispatches async to a background queue, then dispatches the completion to the main queue. If the app exits before the chain completes, `pmset -a disablesleep 0` never runs. This was virtually guaranteed to happen since `applicationWillTerminate` is synchronous.
+- **Fix**: Added `disableSleepPreventionSync()` to `SleepController` — runs `sudo pmset -a disablesleep 0` synchronously, blocking until the process exits. `cleanup()` now calls this instead of the async path.
+- **What was considered**: Using `DispatchSemaphore` in the existing async path, but that deadlocks because the completion dispatches to the main queue which is already blocked by the semaphore wait. A dedicated sync method avoids the issue entirely.
+
+**8. Sudoers recovery on failure (SleepManager.swift:78, 96, 102-106)**
+- **Problem**: If the sudoers file was deleted or corrupted after initial setup, every enable/disable call would fail, but the app would never re-show the setup screen because `needsSetup` was only set once at launch.
+- **Fix**: Added `checkSetupValidity()` called on enable/disable failure. If the sudoers file no longer exists, `needsSetup` is set back to `true`, re-showing the setup screen.
+
+**9. Removed vestigial XPC helper (project.yml, SleepToggleHelper/, SleepToggle/Shared/)**
+- **Problem**: The entire `SleepToggleHelper` target, its source files, plist, entitlements, and the shared `SleepToggleXPCProtocol.swift` were still in the project from the abandoned XPC approach. Added ~90KB to the app bundle and confused the codebase.
+- **Fix**: Deleted `SleepToggleHelper/` directory, `SleepToggle/Shared/` directory, removed the helper target + dependency + postBuildScript from `project.yml`. Net -235 lines.
+
+### What Remains (5 items, ordered by priority)
+
+These are real issues found during review. Each has been verified by at least one reviewer with confidence >= 0.72. None are blocking for basic usage, but all should be addressed.
+
+**R1. App crash / force-quit leaves sleep permanently disabled**
+- **Severity**: P1 — user's battery drains if they force-quit while sleep is prevented
+- **File**: `SleepToggleApp.swift` (app lifecycle)
+- **Problem**: `applicationWillTerminate` calls `cleanup()` which now works for graceful exits. But `SIGKILL` (force-quit, system shutdown) skips `applicationWillTerminate` entirely. Sleep stays disabled until the user manually runs `pmset -a disablesleep 0`.
+- **Suggested approach**: Write a flag to disk (e.g., `~/.sleeptoggle_active`) when sleep prevention is enabled, remove it on disable. On app launch, if the flag exists but sleep is not expected to be active, run disable. This handles crash recovery.
+- **Why not done yet**: Needs a design decision about where to store the flag and whether to also handle the "app was uninstalled" case.
+
+**R2. Process.waitUntilExit() blocks without timeout**
+- **Severity**: P1 — if `pmset` or `sudo` hangs, the background thread blocks forever
+- **File**: `SleepController.swift:79` (runPmset), also `getSleepPreventionStatus`
+- **Problem**: Both `runPmset` and `getSleepPreventionStatus` call `process.waitUntilExit()` with no timeout. If `pmset` hangs (e.g., system under heavy load, sudo misconfigured), the thread is consumed permanently.
+- **Suggested approach**: Use `DispatchSemaphore` with a timeout:
+  ```swift
+  let sem = DispatchSemaphore(value: 0)
+  process.terminationHandler = { _ in sem.signal() }
+  try process.run()
+  if sem.wait(timeout: .now() + 10) == .timedOut {
+      process.terminate()
+      // report timeout error
+  }
+  ```
+- **Why not done yet**: Changing from `waitUntilExit()` to `terminationHandler` changes the control flow. The `readDataToEndOfFile()` call after `waitUntilExit` also needs to be coordinated — reading before the process exits can block or return partial data.
+
+**R3. Wi-Fi monitoring fails silently without location permission**
+- **Severity**: P2 — user sees "No Wi-Fi connected" when the real issue is missing permission
+- **File**: `WiFiMonitor.swift:20`, `SettingsView.swift`
+- **Problem**: `startMonitoring()` catches the CoreWLAN error and prints to console. The user never sees it. `currentSSID()` returns nil, and the UI shows "No Wi-Fi connected" — misleading when connected but permission-denied.
+- **Suggested approach**:
+  1. In `WiFiMonitor`, expose a `var monitoringFailed: Bool` or propagate the error via callback
+  2. In `SettingsView`, check `CLLocationManager.authorizationStatus`. If denied, show "Location access required for Wi-Fi detection" with a button: `NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices")!)`
+- **Why not done yet**: Requires UI changes and a decision about how prominently to surface the error.
+
+**R4. No test infrastructure**
+- **Severity**: P2 — all critical paths are untested
+- **File**: `project.yml` (no test target)
+- **Problem**: Zero test files, zero test targets. Critical paths that need tests:
+  - `SleepManager` state machine (enable/disable/timer/wifi/battery transitions)
+  - `AppSettings` battery threshold default logic
+  - `SleepController` pmset output parsing (`getSleepPreventionStatus`)
+  - Timer expiry and callback ordering
+- **Suggested approach**: Add a `SleepToggleTests` target to `project.yml`. Start with `SleepManager` state transitions since they're pure logic once the `SleepController` is mocked. The IOKit/CoreWLAN code is hard to unit test (system APIs), so focus on the coordinator and parsing logic.
+- **Why not done yet**: Needs the xcodegen test target setup and a decision on mocking strategy.
+
+**R5. Concurrent enable/disable race condition**
+- **Severity**: P2 — UI state can diverge from system state under rapid toggling
+- **File**: `SleepManager.swift:68-100`
+- **Problem**: `enable()` and `disable()` both dispatch async work without mutual exclusion. If the user clicks toggle while a battery/wifi event also triggers a state change, two concurrent `pmset` calls execute. The last completion handler to reach the main queue wins, but the system state may not match.
+- **Suggested approach**: Add an `isTransitioning` flag checked before dispatching enable/disable. Or use a serial `DispatchQueue` for all state mutations:
+  ```swift
+  private let stateQueue = DispatchQueue(label: "com.sleeptoggle.state")
+  ```
+  Route all enable/disable/status through this queue.
+- **Why not done yet**: Requires restructuring the async flow. The current code dispatches to `.global(qos: .userInitiated)` for the process, then back to `.main` for state updates. Adding a serial queue in between needs care to avoid deadlocks.
+
+### Updated File Map
+
+```
+SleepToggle/
+  project.yml                              # xcodegen spec — single target now (helper removed)
+  SleepToggle.xcodeproj/                   # generated — STALE, run `xcodegen generate` to update
+  HANDOFF.md                               # this file
+  SleepToggle/
+    SleepToggleApp.swift                   # @main App + AppDelegate (NSStatusItem + NSPopover)
+    Views/
+      StatusPanelView.swift                # Main popover: toggle, timer, info, setup screen
+      SettingsView.swift                   # Inline settings: Wi-Fi networks, battery threshold, launch at login
+    Models/
+      AppSettings.swift                    # UserDefaults wrapper (watchedNetworks, batteryThreshold, launchAtLogin)
+    Services/
+      SleepManager.swift                   # @Observable central coordinator (toggle, timer, wifi, battery)
+      SleepController.swift                # Sudoers setup + sudo pmset via Process (renamed from XPCClient.swift)
+      WiFiMonitor.swift                    # CoreWLAN + CoreLocation SSID monitoring
+      BatteryMonitor.swift                 # IOKit IOPowerSources battery level + AC status
+      TimerService.swift                   # Countdown timer with onTick/onExpire callbacks
+    Resources/
+      Info.plist                           # LSUIElement=true, NSLocationWhenInUseUsageDescription
+      SleepToggle.entitlements             # Currently empty dict (may need wifi-info entitlement)
+```
+
+### Build After Review Changes
+
+```bash
+cd /Users/gyudaekim/Projects/SleepToggle
+xcodegen generate                          # REQUIRED — project.yml changed, file renamed, files deleted
+xcodebuild -project SleepToggle.xcodeproj -scheme SleepToggle -configuration Debug build
+```
