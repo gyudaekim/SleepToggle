@@ -10,11 +10,18 @@ The user is **not a developer**. They previously ran `sudo pmset -a disablesleep
 
 The app **builds and runs** (`BUILD SUCCEEDED`). It shows a bolt icon in the menu bar and presents a popover panel with toggle, timer, Wi-Fi settings, battery info, and a settings page.
 
+### Release 1.0.1
+
+- Fixed outside-click dismissal by changing only the popover behavior from `.applicationDefined` to `.transient`; sleep-control logic is unchanged.
+- App version: `1.0.1`, build `2`, macOS 14+, universal Apple Silicon/Intel binary.
+- Build: `xcodegen generate`, then `xcodebuild -project SleepToggle.xcodeproj -scheme SleepToggle -configuration Release -derivedDataPath /tmp/SleepToggle-build ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=YES build`.
+- Distribution: ad-hoc signed, not Developer ID signed or notarized. Downloaded copies may require approval through macOS Privacy & Security. Quit the old app, replace `/Applications/SleepToggle.app`, and reopen it. Existing preferences are retained.
+
 ### What Works
 
 - **Build system**: `xcodegen generate && xcodebuild -project SleepToggle.xcodeproj -scheme SleepToggle -configuration Debug build` succeeds cleanly.
 - **Menu bar icon**: Appears as `bolt.slash.fill` (off) / `bolt.fill` (on). Uses `NSStatusItem` + `NSPopover` via `AppDelegate`.
-- **Popover panel**: Does NOT dismiss when clicking inside (fixed by switching from `MenuBarExtra .window` to `NSPopover` with `.applicationDefined` behavior).
+- **Popover panel**: Uses `NSPopover` with `.transient` behavior. Clicking inside keeps it open; clicking outside dismisses it. The menu bar icon still toggles it open/closed.
 - **Settings inline navigation**: Settings page renders inside the same popover (no sheet). Back button returns to main view.
 - **Wi-Fi delete button**: Works — uses `@State` array synced to `AppSettings` (UserDefaults).
 - **Project generation**: `project.yml` with xcodegen. Two targets: `SleepToggle` (app) and `SleepToggleHelper` (tool, embedded at `Contents/Library/LaunchDaemons/`).
@@ -35,7 +42,7 @@ These features are **coded but not confirmed working end-to-end** by the user:
 
 6. **Launch at login**: Uses `SMAppService.mainApp.register()`. Should work on macOS 14+.
 
-7. **Popover dismiss on outside click**: Currently `popover.behavior = .applicationDefined`, which means the popover does NOT auto-close when clicking outside. Consider adding an event monitor to close on outside click, or switch to `.transient` if the interior-click issue is truly fixed.
+7. **Popover dismissal (fixed in 1.0.1)**: Native AppKit smoke verification passed for opening, clicking Settings without dismissal, clicking another window to dismiss, reopening, and closing through the status-item action. The rendered Settings view was also inspected. Cross-app/secondary-display physical clicks were not automated because Accessibility and Screen Recording permissions were unavailable.
 
 ## What Was Tried and Abandoned
 
@@ -69,8 +76,6 @@ Initially set `SWIFT_VERSION: "6.0"` in project.yml.
 1. **Test the one-time setup flow end-to-end.** Click the bolt icon, see the setup screen, click "Grant Permission", enter password. Verify `/etc/sudoers.d/sleeptoggle` exists and has correct content. Then toggle and verify `pmset -g | grep SleepDisabled` flips.
 
 2. **Test lid-close behavior.** Toggle ON, close lid, confirm Mac stays awake (SSH in from another machine, or check `pmset -g` after reopening).
-
-3. **Popover outside-click dismissal.** The popover currently stays open forever until you click the icon again. Add an `NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown])` in `AppDelegate` to close the popover when clicking outside.
 
 4. **Wi-Fi entitlement.** The `com.apple.developer.networking.wifi-info` entitlement may be needed for `CWWiFiClient.interface()?.ssid()` to return a value. Check if SSID is nil even when connected. If so, re-add the entitlement to `SleepToggle/Resources/SleepToggle.entitlements`.
 

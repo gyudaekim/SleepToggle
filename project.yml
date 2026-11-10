@@ -24,6 +24,8 @@ targets:
         LSUIElement: true
         NSLocationWhenInUseUsageDescription: "SleepToggle needs location access to detect Wi-Fi network names for automatic sleep prevention."
         CFBundleDisplayName: SleepToggle
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "2"
     entitlements:
       path: SleepToggle/Resources/SleepToggle.entitlements
     settings:
